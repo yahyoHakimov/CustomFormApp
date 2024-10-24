@@ -1,6 +1,5 @@
 # Use the official .NET SDK image for building the project
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-WORKDIR /src/CustomFormApp.Server
 
 # Copy the .csproj file and restore dependencies as a separate layer
 COPY *.csproj ./
