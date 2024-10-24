@@ -1,17 +1,18 @@
 version: '3.8'
 services:
-  backend:
+  server:
     build:
       context: ./CustomFormApp.Server
       dockerfile: Dockerfile
     ports:
-      - "5000:80" # Map container port 80 to host port 5000
+      - "5000:80"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-    volumes:
-      - ./CustomFormApp.Server:/app # Hot reload during development (optional)
+      - ASPNETCORE_URLS=http://+:80
+      - ConnectionStrings__DefaultConnection=Host=postgres;Database=your_database_name;Username=your_postgres_user;Password=your_postgres_password
     depends_on:
-      - db
+      - postgres
+
 
   frontend:
     build:
@@ -22,15 +23,17 @@ services:
     environment:
       - REACT_APP_API_URL=http://localhost:5000 # Point frontend to the backend
 
-  db:
-    image: mcr.microsoft.com/mssql/server:2022-latest
+  postgres:
+    image: postgres:16
+    restart: always
     environment:
-      SA_PASSWORD: "YourStrongPassword123"
-      ACCEPT_EULA: "Y"
-    ports:
-      - "1433:1433" # Map SQL Server port
+      POSTGRES_USER: customformdb_user
+      POSTGRES_PASSWORD: NbFHTM0HJqa8wZ9WBPV9KBFuPpeEtYp7
+      POSTGRES_DB: customformdb
     volumes:
-      - mssql_data:/var/opt/mssql
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
 
 volumes:
-  mssql_data:
+  postgres_data:
