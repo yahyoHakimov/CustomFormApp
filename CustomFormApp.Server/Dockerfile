@@ -1,7 +1,7 @@
 # Use the official .NET SDK image for building the project
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 
-# Set the working directory to the server project folder
+# Set the working directory to /app
 WORKDIR /app
 
 # Copy the .csproj file and restore dependencies as a separate layer
@@ -10,7 +10,7 @@ WORKDIR /app/CustomFormApp.Server
 RUN dotnet restore
 
 # Copy the remaining project files and build the application
-COPY . .
+COPY CustomFormApp.Server/. .
 RUN dotnet publish -c Release -o /app/out
 
 # Use the official runtime image for running the app
