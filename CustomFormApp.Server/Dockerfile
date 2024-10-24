@@ -1,26 +1,27 @@
 # Use the official .NET SDK image for building the project
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 
-# Set the working directory to /app
+# Set the working directory inside the Docker container
 WORKDIR /app
 
-# Copy the .csproj file and restore dependencies as a separate layer
-COPY CustomFormApp.Server/*.csproj ./CustomFormApp.Server/
-WORKDIR /app/CustomFormApp.Server
+# Copy the .csproj file from the server folder to the build context
+COPY CustomFormApp.Server/CustomFormApp.Server.csproj ./
+
+# Restore dependencies
 RUN dotnet restore
 
-# Copy the remaining project files and build the application
-COPY CustomFormApp.Server/. .
+# Copy the remaining source code from the server directory
+COPY CustomFormApp.Server/. ./
+
+# Publish the application
 RUN dotnet publish -c Release -o /app/out
 
 # Use the official runtime image for running the app
-FROM mcr.microsoft.com/dotnet/aspnet:8.0
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 WORKDIR /app
-COPY --from=build /app/out .
 
-# Set up Nginx for reverse proxy
-FROM nginx:alpine
-COPY nginx.conf /etc/nginx/nginx.conf
+# Copy the published output from the build stage to the runtime stage
+COPY --from=build /app/out .
 
 # Set environment variables (optional)
 ENV ASPNETCORE_URLS=http://+:80
