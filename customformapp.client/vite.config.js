@@ -46,6 +46,7 @@ const target = env.ASPNETCORE_HTTPS_PORT
         : 'https://localhost:7128';
 
 export default defineConfig({
+    base: './',
     plugins: [plugin()],
     resolve: {
         alias: {
@@ -61,11 +62,11 @@ export default defineConfig({
             },
         },
         port: 5173,
-        https: isDevelopment
+        https: /*isDevelopment
             ? {
                 key: fs.existsSync(keyFilePath) ? fs.readFileSync(keyFilePath) : undefined,
                 cert: fs.existsSync(certFilePath) ? fs.readFileSync(certFilePath) : undefined,
             }
-            : false, // Disable HTTPS for production
+            :*/ false, // Disable HTTPS for production
     },
 });
