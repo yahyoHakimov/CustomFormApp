@@ -2,6 +2,7 @@
 using CustomFormApp.Server.Interfaces.IServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace CustomFormApp.Server.Controllers
 {
@@ -56,15 +57,35 @@ namespace CustomFormApp.Server.Controllers
         [HttpPost("{templateId}/submit")]
         public async Task<IActionResult> SubmitForm(int templateId, [FromBody] FormSubmissionDto submissionDto)
         {
-            await _formService.SubmitFormAsync(templateId, submissionDto);
-            return Ok(new { message = "Form submitted successfully" });
+            try
+            {
+                await _formService.SubmitFormAsync(templateId, submissionDto);
+                return Ok(new { message = "Form submitted successfully" });
+            }
+            catch (ValidationException ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { error = ex.Message });
+            }
         }
+
+
 
         [HttpGet("{templateId}/responses")]
         public async Task<IActionResult> GetFormResponses(int templateId)
         {
-            var responses = await _formService.GetFormResponsesAsync(templateId);
-            return Ok(responses);
+            try
+            {
+                var responses = await _formService.GetFormResponsesAsync(templateId);
+                return Ok(responses);
+            } catch (Exception ex)
+            {
+                return StatusCode(500, new { error = ex.Message });
+            }
+            
         }
     }
 }

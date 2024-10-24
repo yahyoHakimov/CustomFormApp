@@ -1,6 +1,8 @@
 ﻿using CustomFormApp.Server.DbContext;
 using CustomFormApp.Server.Interfaces.IRepository;
 using CustomFormApp.Server.Models;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace CustomFormApp.Server.Repository
 {
@@ -19,11 +21,17 @@ namespace CustomFormApp.Server.Repository
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<List<Form>> GetFormsByTemplateIdAsync(int templateId)
+        public IQueryable<Form> GetFormsByTemplateIdAsync(int templateId)
         {
-            return await _dbContext.Forms
-                .Where(f => f.TemplateId == templateId)
-                .ToListAsync();
+            return _dbContext.Forms.Where(f => f.TemplateId == templateId).AsQueryable();
+        }
+
+
+        public async Task<Template> GetTemplateByIdAsync(int templateId)
+        {
+            return await _dbContext.Templates
+                .Include(t => t.Questions) // Ensure questions are included if needed.
+                .FirstOrDefaultAsync(t => t.Id == templateId);
         }
     }
 

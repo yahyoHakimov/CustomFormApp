@@ -28,8 +28,10 @@ builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<ITemplateService, TemplateService>();
 builder.Services.AddScoped<ITemplateRepository, TemplateRepository>();
 builder.Services.AddScoped<ITemplateService, TemplateService>();
-services.AddScoped<IFormService, FormService>();
-services.AddScoped<IFormRepository, FormRepository>();
+builder.Services.AddScoped<IFormService, FormService>();
+builder.Services.AddScoped<IFormRepository, FormRepository>();
+
+builder.Services.AddHttpContextAccessor();
 
 
 

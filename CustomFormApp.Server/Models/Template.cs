@@ -10,6 +10,8 @@ namespace CustomFormApp.Server.Models
         [MaxLength(100)]
         public string Title { get; set; }
 
+        public List<Question> Questions { get; set; }
+
         [MaxLength(1000)]
         public string Description { get; set; }
 

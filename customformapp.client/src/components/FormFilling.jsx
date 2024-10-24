@@ -36,6 +36,7 @@ const FormFilling = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (!validateForm()) return;
         try {
             await submitFormResponse(id, formData); // Submit the form data to the backend
             alert('Form submitted successfully!');
@@ -44,6 +45,18 @@ const FormFilling = () => {
             console.error('Error submitting form:', error);
             alert('Failed to submit form');
         }
+    };
+
+    const validateForm = () => {
+        let isValid = true;
+        template.questions.forEach((question) => {
+            const value = formData[question.title];
+            if (question.required && !value) {
+                alert(`Please provide an answer for "${question.title}"`);
+                isValid = false;
+            }
+        });
+        return isValid;
     };
 
     if (!template) {

@@ -24,28 +24,28 @@
             return Ok(users);
         }
 
-        [HttpPost("block")]
-        public async Task<IActionResult> BlockUser([FromBody] string userId)
+        [HttpPost("block/{userId}")]
+        public async Task<IActionResult> BlockUser(string userId)
         {
             var success = await _adminService.BlockUserAsync(userId);
-            if (!success) return NotFound();
-            return Ok();
+            if (!success) return NotFound(new { message = "User not found" });
+            return Ok(new { message = "User blocked successfully" });
         }
 
-        [HttpPost("unblock")]
-        public async Task<IActionResult> UnblockUser([FromBody] string userId)
+        [HttpPost("unblock/{userId}")]
+        public async Task<IActionResult> UnblockUser(string userId)
         {
             var success = await _adminService.UnblockUserAsync(userId);
-            if (!success) return NotFound();
-            return Ok();
+            if (!success) return NotFound(new { message = "User not found" });
+            return Ok(new { message = "User unblocked successfully" });
         }
 
         [HttpPut("role")]
         public async Task<IActionResult> UpdateUserRole([FromBody] UpdateUserRoleDto dto)
         {
             var success = await _adminService.UpdateUserRoleAsync(dto.UserId, dto.Role);
-            if (!success) return NotFound();
-            return Ok();
+            if (!success) return NotFound(new { message = "User not found or invalid role" });
+            return Ok(new { message = $"User role updated to {dto.Role}" });
         }
     }
 

@@ -46,7 +46,9 @@ const TemplateList = () => {
                                         ))}
                                     </ul>
                                 </div>
+                                <p>Number of responses: {template.responseCount}</p>
                                 <Link to={`/fill-form/${template.id}`}>Fill Form</Link>
+                                <Link to={`/view-responses/${template.id}`}>View Responses</Link>
                             </li>
                         ))}
                     </ul>
