@@ -13,5 +13,13 @@ namespace CustomFormApp.Server.DbContext
 
         public DbSet<Template> Templates { get; set; }
         public DbSet<Form> Forms { get; set; }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseNpgsql("Your PostgreSQL Connection String");
+            }
+        }
     }
 }

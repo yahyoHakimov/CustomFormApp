@@ -1,0 +1,36 @@
+version: '3.8'
+services:
+  backend:
+    build:
+      context: ./CustomFormApp.Server
+      dockerfile: Dockerfile
+    ports:
+      - "5000:80" # Map container port 80 to host port 5000
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    volumes:
+      - ./CustomFormApp.Server:/app # Hot reload during development (optional)
+    depends_on:
+      - db
+
+  frontend:
+    build:
+      context: ./customformapp.client
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80" # Map container port 80 to host port 3000
+    environment:
+      - REACT_APP_API_URL=http://localhost:5000 # Point frontend to the backend
+
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      SA_PASSWORD: "YourStrongPassword123"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433" # Map SQL Server port
+    volumes:
+      - mssql_data:/var/opt/mssql
+
+volumes:
+  mssql_data:
